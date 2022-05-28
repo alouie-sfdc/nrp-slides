@@ -11,16 +11,21 @@ from os.path import exists
 load_dotenv()
 
 DATA_DIRECTORY = getenv("DATA_DIRECTORY", "sample-data")
+BASE_PHOTO_LOCATION = getenv("BASE_PHOTO_LOCATION", DATA_DIRECTORY)
+
 STUDENT_LIST_FILENAME = f"{DATA_DIRECTORY}/" + getenv(
     "STUDENT_LIST_FILENAME", "student_list.csv"
 )
 MARKDOWN_OUTPUT_FILENAME = getenv("MARKDOWN_OUTPUT_FILENAME", "slides.md")
 
 DIVISION_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv("DIVISION_DIRECTORY", "divisions")
-BABY_PHOTO_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv(
+BABY_PHOTO_LOCATION = f"{BASE_PHOTO_LOCATION}/" + getenv(
     "BABY_PHOTO_DIRECTORY", "baby-photos"
 )
-SCHOOL_PHOTO_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv(
+BABY_PHOTO_LOCAL_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv(
+    "BABY_PHOTO_DIRECTORY", "baby-photos"
+)
+SCHOOL_PHOTO_LOCATION = f"{BASE_PHOTO_LOCATION}/" + getenv(
     "SCHOOL_PHOTO_DIRECTORY", "school-photos"
 )
 
@@ -50,7 +55,7 @@ def get_divisions():
     """
     :return: A dictionary with keys being division names and values being lists of student names.
     """
-    filenames = glob.glob(f"{DIVISION_DIRECTORY}/*.csv")
+    filenames = sorted(glob.glob(f"{DIVISION_DIRECTORY}/*.csv"))
     divisions = {}
     for filename in filenames:
         match = re.search(f"{DIVISION_DIRECTORY}/(.+).csv", filename)
@@ -85,26 +90,31 @@ def generate_markdown_file():
             f.write(division_title_slide)
 
             for student in students:
+                try:
+                    photo = student_info[student]["photo"]
+                except KeyError:
+                    print(f"WARNING: no student info for {student}")
+                    continue
+
                 # See if the student has a baby picture.
-                photo = student_info[student]["photo"]
-                has_baby_photo = exists(f"{BABY_PHOTO_DIRECTORY}/{photo}")
+                has_baby_photo = exists(f"{BABY_PHOTO_LOCAL_DIRECTORY}/{photo}")
                 if has_baby_photo:
                     slide = f"""
 ---
 # {student}
 
-![]({BABY_PHOTO_DIRECTORY}/{photo})
+![]({BABY_PHOTO_LOCATION}/{photo})
 
 {{.column}}
 
-![]({SCHOOL_PHOTO_DIRECTORY}/{photo})
+![]({SCHOOL_PHOTO_LOCATION}/{photo})
 """
                 else:
                     slide = f"""
 ---
 # {student}
 ## - 
-![]({SCHOOL_PHOTO_DIRECTORY}/{photo})
+![]({SCHOOL_PHOTO_LOCATION}/{photo})
 """
                 f.write(slide)
 

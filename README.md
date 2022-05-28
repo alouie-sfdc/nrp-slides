@@ -90,3 +90,9 @@ Van Houten, Milhouse
 ```
 
 Your slides will be generated based on what's in the CSV and image files.
+
+### Hosting photos externally
+
+By default, `md2gslides` uses the file.io service to temporarily host photos. It's a free service that works well for a few photos, but if you have more photos, you'll likely run into problems because of the file upload limits for the free plan.
+
+A better solution is to temporarily host the photos yourself. You can do this rather easily with Heroku by following the instructions for [deploying a static site](https://gist.github.com/wh1tney/2ad13aa5fbdd83f6a489).
