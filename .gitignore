@@ -1,0 +1,11 @@
+.env
+
+# Don't include actual names or photos
+real-data
+
+# Auto-generated files
+slides.md
+
+# IntelliJ
+*.iml
+.idea
