@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from os import system, getenv
 from os.path import exists
 
+# dotenv lets us specify configuration variables in the .env file.
 load_dotenv()
 
 DATA_DIRECTORY = getenv("DATA_DIRECTORY", "sample-data")
