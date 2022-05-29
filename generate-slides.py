@@ -28,6 +28,9 @@ BABY_PHOTO_LOCAL_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv(
 SCHOOL_PHOTO_LOCATION = f"{BASE_PHOTO_LOCATION}/" + getenv(
     "SCHOOL_PHOTO_DIRECTORY", "school-photos"
 )
+SCHOOL_PHOTO_LOCAL_DIRECTORY = f"{DATA_DIRECTORY}/" + getenv(
+    "SCHOOL_PHOTO_DIRECTORY", "school-photos"
+)
 
 SLIDESHOW_TITLE = getenv("SLIDESHOW_TITLE", "My Slideshow")
 SLIDESHOW_SUBTITLE = getenv("SLIDESHOW_SUBTITLE", "My slideshow subtitle")
@@ -92,14 +95,18 @@ def generate_markdown_file():
             for student in students:
                 try:
                     photo = student_info[student]["photo"]
+                    has_student_photo = exists(
+                        f"{SCHOOL_PHOTO_LOCAL_DIRECTORY}/{photo}"
+                    )
                 except KeyError:
                     print(f"WARNING: no student info for {student}")
-                    continue
+                    has_student_photo = False
 
                 # See if the student has a baby picture.
                 has_baby_photo = exists(f"{BABY_PHOTO_LOCAL_DIRECTORY}/{photo}")
-                if has_baby_photo:
-                    slide = f"""
+                if has_student_photo:
+                    if has_baby_photo:
+                        slide = f"""
 ---
 # {student}
 
@@ -109,23 +116,49 @@ def generate_markdown_file():
 
 ![]({SCHOOL_PHOTO_LOCATION}/{photo})
 """
-                else:
-                    slide = f"""
+                    else:
+                        slide = f"""
 ---
 # {student}
 ## - 
 ![]({SCHOOL_PHOTO_LOCATION}/{photo})
 """
+                elif has_baby_photo:
+                    slide = f"""
+---
+# {student}
+
+![]({BABY_PHOTO_LOCATION}/{photo})
+
+{{.column}}
+
+SCHOOL PHOTO NEEDED
+"""
+                else:
+                    slide = f"""
+---
+# {student}
+## - 
+SCHOOL PHOTO NEEDED
+"""
+
                 f.write(slide)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--id")
+    parser.add_argument(
+        "--markdown-only",
+        action="store_true",
+        help="Generate the markdown file, but don't upload slides.",
+    )
     parsed_args = parser.parse_args()
     slide_id = parsed_args.id
 
     generate_markdown_file()
+    if parsed_args.markdown_only:
+        exit()
 
     # See https://github.com/googleworkspace/md2googleslides#installation-and-usage
     # for more information about the `md2gslides` tool.

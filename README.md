@@ -53,6 +53,11 @@ Then use this command to re-generate the slides at that URL:
 $ python generate-slides.py -i 1VXyAXRXR168tM5xlNB2BoL5pK8IPAwMDu-6PoPan2Ag
 ```
 
+You can also update the local markdown file without updating the slides:
+```
+$ python generate-slides.py --markdown-only
+```
+
 ## Making your own slide deck
 
 Follow the example from the `sample-data` directory:
