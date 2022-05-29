@@ -101,6 +101,7 @@ def generate_markdown_file():
                 except KeyError:
                     print(f"WARNING: no student info for {student}")
                     has_student_photo = False
+                    photo = None
 
                 # See if the student has a baby picture.
                 has_baby_photo = exists(f"{BABY_PHOTO_LOCAL_DIRECTORY}/{photo}")
