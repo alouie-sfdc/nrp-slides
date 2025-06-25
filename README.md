@@ -4,20 +4,18 @@
 
 Generate a Google Slides slideshow based on school pictures and baby photos.
 
-This leans heavily on the [md2gslides](https://github.com/googleworkspace/md2googleslides) program, which generates Google Slides from a markdown file.
+This leans heavily on the [md2gslides](https://github.com/wescpy/md2googleslides) program, which generates Google Slides from a markdown file. (The link is to a fork of the original repo, because it has some fixes that haven't been incorporated into the original.)
 
 ## Installation
 
 ### Prerequisite: install `md2gslides`
 
-The [installation instructions](https://github.com/googleworkspace/md2googleslides#installation-and-usage) for `md2gslides` are mostly right, but instead of running `npm install -g md2gslides`, you need to run this:
+Follow the [installation instructions](https://github.com/wescpy/md2googleslides/blob/master/README.md#installation-and-usage) and run:
 ```
-$ npm install -g googleworkspace/md2googleslides
+$ npm install -g @wescpy/md2gslides
 ```
 
-The reason is that there's a [bug](https://github.com/googleworkspace/md2googleslides/issues/95#issuecomment-1004022204) that's been fixed, but not officially released yet.
-
-The rest of the installation instructions from `md2gslides` should work. "Computer Application" is now labelled "Desktop App" in the Google Cloud Platform's `Application Type` drop-down when creating the OAuth client ID.
+Note: "Computer Application" is now labelled "Desktop App" in the Google Cloud Platform's `Application Type` drop-down when creating the OAuth client ID.
 
 ### Get the code and install dependencies
 
